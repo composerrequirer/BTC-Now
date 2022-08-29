@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Now</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+            color: white
+        }
+        .container{
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.808);
+        }
+
+        header, footer, .prices{
+            height: 15vh;
+            display: flex;
+            flex-wrap: wrap;
+            place-content: center;
+        }
+
+        header, footer{
+            background-color: rgba(0, 0, 0, 0.486);
+        }
+
+        .prices{
+            flex-direction: column;
+            gap: 10px;
+            text-align: right;
+            font-size: 20px;
+            height: calc(100vh - 30vh);
+            place-content: center start ;
+            padding: 30px 0px;
+        }
+
+        .price-container{
+            background-color: rgba(0, 0, 0, 0.486);
+            padding: 10px;
+            width: 100vw;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><h1>BTC Now</h1></header>
+        <section class="prices">
+            <article class="price-container usd-price"></article>
+            <article class="price-container brl-price"></article>
+        </section>
+        <footer>
+            <p> BTC Now todos os diretos reservados &copy;</p>
+        </footer>
+    </div>
+
+    <script>
+        // Elements:
+        let usd_price = document.querySelector('.usd-price');
+        let brl_price = document.querySelector('.brl-price');
+
+        let event = new EventSource('/register');
+        event.onmessage = (msg) =>{
+            msg = JSON.parse(msg.data);
+
+            let currencyParserUs = Intl.NumberFormat('en-US');
+            let currencyParserIn = Intl.NumberFormat('en-IN');
+            
+            let priceUsdNumber = Number.parseFloat(msg.btcToUsd)
+            let priceBrlNumber = Number.parseFloat(msg.btcToBrl)
+
+            usd_price.innerHTML = "USD price $" + currencyParserUs.format(priceUsdNumber);
+            brl_price.innerHTML = "BRL price R$" + currencyParserUs.format(priceBrlNumber);
+        };
+        
+    </script>
+</body>
+</html>
